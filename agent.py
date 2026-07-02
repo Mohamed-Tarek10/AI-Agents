@@ -9,8 +9,7 @@ from agents import Agent, Runner, WebSearchTool, ModelSettings
 import asyncio
 
 _ = load_dotenv(find_dotenv())
-
-client = OpenAI(api_key = os.dot_env.get("OPEN_AI_API_KEY"))
+client = OpenAI(api_key = os.getenv("OPEN_AI_API_KEY"))
 
 
 class TravelOutput(BaseModel):
@@ -22,15 +21,15 @@ class TravelOutput(BaseModel):
 travel_agent = Agent(
     name = "Travel Agent",
     model = "gpt-5",
-    instruction =( 
+    instructions =( 
         "your are a friendly and knowledgeable travel planner," 
     " you will help the use to plan their next trip," 
     " you will provide a destination, duration and a summary of the trip, and create a brief summary about the trip.Always return your response as a JSON response, matching to this structure:" 
     '{ \"destination\": \"<destination>\", \"duration\": \"<duration>\", \"summary\": \"<summary>\" }'
     ), 
 output_type = TravelOutput,
-model_swttings = ModelSettings(
-    reseoning = {"effort": "medium"}, # keep the reasoning medium to take enough time to think and provide the answer.
+model_settings = ModelSettings(
+    reasoning = {"effort": "medium"}, # keep the reasoning medium to take enough time to think and provide the answer.
     extra_body = {"text": {"verbosity": "low"}} # Keep response short, concise and to the point
     )
 )
@@ -45,8 +44,8 @@ def print_field(data):
         except (json.JSONDecodeError, ValidationError) as e:
             print("Raw Output: ", data)
             return
-    print(f"Destination: {data.dstination}")
-    print(f"Duration: {data.Duration}")
+    print(f"Destination: {data.destination}")
+    print(f"Duration: {data.duration}")
     print(f"Summary: {data.summary}")
 
 
